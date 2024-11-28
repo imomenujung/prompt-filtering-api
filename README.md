@@ -1,142 +1,78 @@
 
-# Prompt Filter API
+# Prompt Filtering API
 
-This project implements a Flask-based API that filters input prompts using a combination of keyword matching and embeddings-based similarity. It checks if a prompt contains sensitive keywords or exceeds a threshold similarity with the provided keywords.
+## Deskripsi
+Prompt Filtering API adalah aplikasi berbasis FastAPI yang dirancang untuk memfilter input teks berdasarkan kata kunci tertentu dan mengukur kemiripan semantik menggunakan model *sentence embeddings*. Tujuan utama API ini adalah untuk memastikan prompt aman digunakan dengan memadukan pendekatan berbasis aturan dan pembelajaran mesin.
 
-## Requirements
+## Fitur Utama
+1. **Pemeriksaan berdasarkan kata kunci eksplisit**: Deteksi prompt yang mengandung kata kunci tidak diinginkan.
+2. **Pemeriksaan berbasis embeddings**: Menggunakan model `SentenceTransformer` untuk mengukur kemiripan semantik antara prompt dan daftar kata kunci filter.
+3. **Endpoint API yang mudah digunakan**: Menyediakan endpoint `/check_prompt` untuk memvalidasi prompt.
 
-Before running this application, make sure you have the following dependencies installed:
+## Teknologi yang Digunakan
+- **FastAPI**: Framework web untuk membangun API yang cepat dan efisien.
+- **Sentence Transformers**: Library pembelajaran mesin untuk *sentence embeddings*.
+- **Python**: Bahasa pemrograman utama.
 
-- Python 3.6+ 
-- Flask
-- Sentence-Transformers
-- PyTorch
+## Prasyarat
+1. Python 3.8 atau lebih baru.
+2. File `filter_keywords.json` yang berisi kata kunci filter dalam format berikut:
+    ```json
+    {
+        "keywords": ["keyword1", "keyword2", "keyword3"]
+    }
+    ```
 
-You can install the required dependencies by running:
+## Cara Instalasi dan Penggunaan
 
+### 1. Instalasi Dependensi
 ```bash
-pip install flask sentence-transformers torch
+pip install fastapi uvicorn sentence-transformers
 ```
 
-## Setup
-
-1. **Download the necessary model**:
-   The app uses the `all-MiniLM-L6-v2` model from the `sentence-transformers` library to compute embeddings. The model will automatically be downloaded when you run the app for the first time.
-
-2. **Create `filter_keywords.json` file**:
-   This file contains a list of sensitive keywords that the app will check against. Here is an example of the JSON format:
-
-   ```json
-   {
-     "keywords": [
-       "sensitive term 1",
-       "sensitive term 2",
-       "confidential phrase"
-     ]
-   }
-   ```
-
-   The app will load these keywords to check if they exist in the input prompt.
-
-## Running the Application
-
-To run the Flask app locally, execute the following command in the project directory:
-
+### 2. Jalankan API
 ```bash
-python your_script_name.py
+uvicorn main:app --reload
 ```
 
-This will start a local server at `http://127.0.0.1:5000`.
+### 3. Endpoint API
+- **GET /**: Mengembalikan pesan sambutan.
+- **POST /check_prompt**: Memvalidasi prompt berdasarkan kriteria keamanan.
 
-## API Endpoint
-
-The app exposes the following API endpoint:
-
-### POST `/filter_prompt`
-
-This endpoint checks if a given prompt is safe. It performs two checks:
-1. **Embedding similarity check**: Compares the prompt embedding with the embeddings of the keywords.
-2. **Keyword matching check**: Checks if any of the sensitive keywords appear in the prompt text.
-
-#### Request Body
-
+### Contoh Payload untuk Endpoint `/check_prompt`
 ```json
 {
-  "prompt": "Your input prompt here"
+    "prompt": "Contoh teks yang ingin diperiksa"
 }
 ```
 
-- `prompt`: The input text to be evaluated.
+### Respon
+- Jika aman:
+    ```json
+    {
+        "safe": true
+    }
+    ```
+- Jika tidak aman:
+    ```json
+    {
+        "safe": false
+    }
+    ```
 
-#### Response
+## Alur Logika
+1. **Memuat Kata Kunci**: Kata kunci dimuat dari file `filter_keywords.json`.
+2. **Pemeriksaan Embedding**: Mengukur kesamaan semantik antara prompt dan kata kunci.
+3. **Pemeriksaan Eksplisit**: Memeriksa apakah prompt mengandung kata kunci secara langsung.
+4. **Hasil Validasi**: Menggabungkan hasil dari kedua pemeriksaan untuk menentukan keamanan prompt.
 
-The response will be a JSON object indicating whether the prompt is safe or not.
-
-```json
-{
-  "prompt": "Your input prompt here",
-  "safe": true,
-  "message": "Prompt is safe"
-}
+## Struktur Direktori
+```
+.
+├── main.py                 # File utama API
+├── filter_keywords.json    # File kata kunci
+├── README.md               # Dokumentasi
 ```
 
-If the prompt contains sensitive keywords or exceeds the similarity threshold, the response will be:
-
-```json
-{
-  "prompt": "Your input prompt here",
-  "safe": false,
-  "message": "Prompt is not safe"
-}
-```
-
-If the prompt is missing or invalid, you will get an error response:
-
-```json
-{
-  "error": "Prompt is required"
-}
-```
-
-In case of other errors:
-
-```json
-{
-  "error": "Error message here"
-}
-```
-
-## Testing the API
-
-You can test the API using tools like **Postman** or **cURL**.
-
-### Example with cURL:
-
-```bash
-curl -X POST http://127.0.0.1:5000/filter_prompt \
--H "Content-Type: application/json" \
--d '{"prompt": "example sensitive term"}'
-```
-
-### Example with Postman:
-
-1. Set the HTTP method to `POST`.
-2. Enter the URL `http://127.0.0.1:5000/filter_prompt`.
-3. In the body section, choose **raw** and **JSON** format.
-4. Add your input data:
-   ```json
-   {
-     "prompt": "example sensitive term"
-   }
-   ```
-5. Send the request and check the response.
-
-## Customizing the Threshold
-
-The similarity threshold used to compare embeddings is set to `0.7` by default. You can modify it in the function `is_prompt_safe_with_embeddings`:
-
-```python
-def is_prompt_safe_with_embeddings(prompt, keywords, threshold=0.7):
-```
-
-Change the `threshold` value to a higher or lower number to adjust the sensitivity of the check.
+## Catatan
+Pastikan file `filter_keywords.json` berada di direktori yang sama dengan `main.py`.
