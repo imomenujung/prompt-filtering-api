@@ -133,11 +133,10 @@ curl -X POST https://prompt-filtering-api.onrender.com/check_prompt \
 
 ## Customizing the Threshold
 
-The similarity threshold used to compare embeddings is set to `0.3` by default. You can modify it in the function `is_prompt_safe_with_embeddings`:
+The similarity threshold used to compare embeddings is set to `0.5` by default. You can modify it in the function `is_prompt_safe_with_embeddings`:
 
 ```python
-def is_prompt_safe_with_embeddings(prompt, keywords, threshold=0.3):
+def is_prompt_safe_with_embeddings(prompt, keywords, threshold=0.5):
 ```
 
 Change the `threshold` value to a higher or lower number to adjust the sensitivity of the check.
-```
