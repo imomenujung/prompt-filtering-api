@@ -1,4 +1,3 @@
-
 # Prompt Filter API
 
 This project implements a FastAPI-based API that filters input prompts using a combination of keyword matching and embeddings-based similarity. It checks if a prompt contains sensitive keywords or exceeds a threshold similarity with the provided keywords.
@@ -75,13 +74,11 @@ This endpoint checks if a given prompt is safe. It performs two checks:
 
 #### Response
 
-The response will be a JSON object indicating whether the prompt is safe or not.
+The response will be a simplified JSON object indicating whether the prompt is safe or not, with just the `safe` key:
 
 ```json
 {
-  "prompt": "Your input prompt here",
-  "safe": true,
-  "message": "Prompt is safe"
+  "safe": true
 }
 ```
 
@@ -89,9 +86,7 @@ If the prompt contains sensitive keywords or exceeds the similarity threshold, t
 
 ```json
 {
-  "prompt": "Your input prompt here",
-  "safe": false,
-  "message": "Prompt is not safe"
+  "safe": false
 }
 ```
 
@@ -146,5 +141,3 @@ def is_prompt_safe_with_embeddings(prompt, keywords, threshold=0.3):
 
 Change the `threshold` value to a higher or lower number to adjust the sensitivity of the check.
 ```
-
-Simpan file ini sebagai `README.md` dan pastikan Anda mengganti bagian `your_script_name.py` dengan nama file Python yang sesuai. Anda kini siap untuk mendeploy aplikasi dengan dokumentasi lengkap yang mencakup penggunaan API dan pengujian menggunakan cURL atau Postman!
