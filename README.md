@@ -145,7 +145,7 @@ curl -X POST https://prompt-filtering-api.onrender.com/check_prompt \
 import requests
 
 # URL endpoint API yang di-deploy di Render
-url = "https://<your-app-name>.onrender.com/check_prompt"
+url = "https://prompt-filtering-api.onrender.com/check_prompt"
 
 # Data yang akan dikirimkan ke API
 data = {"prompt": "Contoh teks yang ingin diperiksa keamanan"}
