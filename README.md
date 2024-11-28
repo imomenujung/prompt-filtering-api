@@ -1,6 +1,4 @@
-Tentu! Berikut adalah file README.md lengkap yang bisa Anda gunakan:
 
-```markdown
 # Prompt Filter API
 
 This project implements a FastAPI-based API that filters input prompts using a combination of keyword matching and embeddings-based similarity. It checks if a prompt contains sensitive keywords or exceeds a threshold similarity with the provided keywords.
