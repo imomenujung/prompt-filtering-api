@@ -8,13 +8,18 @@ model = SentenceTransformer('all-MiniLM-L6-v2')
 # Initialize FastAPI
 app = FastAPI()
 
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the Prompt Filtering API"}
+
+
 # Fungsi untuk memuat kata kunci filter
 def load_filter_keywords():
     with open("filter_keywords.json", "r") as file:
         return json.load(file)["keywords"]
 
 # Fungsi untuk memeriksa keamanan prompt menggunakan embeddings
-def is_prompt_safe_with_embeddings(prompt, keywords, threshold=0.5):
+def is_prompt_safe_with_embeddings(prompt, keywords, threshold=0.3):
     prompt_embedding = model.encode(prompt, convert_to_tensor=True)
     keyword_embeddings = model.encode(keywords, convert_to_tensor=True)
     similarities = util.cos_sim(prompt_embedding, keyword_embeddings)
