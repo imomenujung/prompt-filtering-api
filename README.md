@@ -105,6 +105,15 @@ In case of other errors:
   "error": "Error message here"
 }
 ```
+## Customizing the Threshold
+
+The similarity threshold used to compare embeddings is set to `0.5` by default. You can modify it in the function `is_prompt_safe_with_embeddings`:
+
+```python
+def is_prompt_safe_with_embeddings(prompt, keywords, threshold=0.5):
+```
+
+Change the `threshold` value to a higher or lower number to adjust the sensitivity of the check.
 
 ## Testing the API
 
@@ -131,12 +140,22 @@ curl -X POST https://prompt-filtering-api.onrender.com/check_prompt \
    ```
 5. Send the request and check the response.
 
-## Customizing the Threshold
-
-The similarity threshold used to compare embeddings is set to `0.5` by default. You can modify it in the function `is_prompt_safe_with_embeddings`:
-
+## Example with Python
 ```python
-def is_prompt_safe_with_embeddings(prompt, keywords, threshold=0.5):
-```
+import requests
 
-Change the `threshold` value to a higher or lower number to adjust the sensitivity of the check.
+# URL endpoint API yang di-deploy di Render
+url = "https://<your-app-name>.onrender.com/check_prompt"
+
+# Data yang akan dikirimkan ke API
+data = {"prompt": "Contoh teks yang ingin diperiksa keamanan"}
+
+# Memanggil API dengan metode POST
+response = requests.post(url, json=data)
+
+# Menampilkan hasil dari response API
+if response.status_code == 200:
+    print("Response from API:", response.json())
+else:
+    print("Failed to call API. Status code:", response.status_code)
+```
